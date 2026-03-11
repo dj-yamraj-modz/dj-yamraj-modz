@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ YAMRAJ MODZ - Official Access</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <style>
+        body { 
+            background: linear-gradient(-45deg, #ff0000, #000000, #4d0000, #1a1a1a);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container { 
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #ff0000;
+            padding: 35px 20px; 
+            border-radius: 20px; 
+            width: 85%; 
+            max-width: 360px; 
+            box-shadow: 0 0 25px #ff0000;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-img { 
+            width: 110px; height: 110px; 
+            border-radius: 50%; 
+            border: 3px solid #ff0000; 
+            margin-bottom: 15px; 
+            box-shadow: 0 0 15px #ff0000;
+            object-fit: cover;
+        }
+
+        h1 { 
+            color: #ff0000; 
+            text-transform: uppercase; 
+            font-size: 24px;
+            letter-spacing: 1.5px;
+            margin: 10px 0;
+            text-shadow: 2px 2px #000; 
+        }
+        
+        #statusMsg { display: none; }
+        
+        .key-box {
+            background: #1a0000; 
+            padding: 15px; 
+            border-radius: 10px; 
+            font-size: 24px; 
+            color: #ffffff; 
+            border: 2px dashed #ff0000;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 8px #ff0000;
+        }
+
+        .copy-btn { 
+            background: #ff0000; 
+            color: #fff; 
+            border: none; 
+            padding: 15px; 
+            width: 100%; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 16px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+        }
+        
+        .copy-btn:hover { 
+            background: #fff; 
+            color: #ff0000; 
+            transform: scale(1.03);
+        }
+
+        .copyright {
+            margin-top: 15px;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="statusMsg">
+        <h1 style="font-size: 50px;">❌</h1>
+        <h1>SITE CLOSED</h1>
+        <p>Wait for Update or Contact Owner</p>
+    </div>
+    
+    <div id="appContent">
+        <img id="userLogo" src="https://via.placeholder.com/150" class="profile-img">
+        <h1 id="userName">DJ YAMRAJ MODZ</h1>
+        <div class="key-box" id="keyDisplay">WAITING...</div>
+        
+        <button class="copy-btn" onclick="copyText()">COPY LOGIN KEY</button>
+        <div class="copyright">© 2026 DJ YAMRAJ MODZ</div>
+    </div>
+</div>
+
+<script>
+    // Firebase Config (তোমার আগেরটাই রাখা হয়েছে)
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3-_v43aZR3efAmRLFL3lfCcret9ofpnk",
+        databaseURL: "https://dj-yamraj-modz-6fd71-default-rtdb.firebaseio.com",
+        projectId: "dj-yamraj-modz-6fd71",
+        storageBucket: "dj-yamraj-modz-6fd71.firebasestorage.app"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Database থেকে ডেটা আনা
+    db.ref('admin_control').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if(data) {
+            // সাইটের নাম DJ YAMRAJ MODZ ফিক্সড থাকবে, যদি না ডাটাবেস থেকে অন্য কিছু পাঠাও
+            document.getElementById('userName').innerText = data.siteName || "DJ YAMRAJ MODZ";
+            document.getElementById('userLogo').src = data.siteLogo || "";
+            
+            // Key আপডেট
+            if(data.key) {
+                document.getElementById('keyDisplay').innerText = data.key;
+            } else {
+                document.getElementById('keyDisplay').innerText = "KEY-7788"; 
+            }
+            
+            // সাইট স্ট্যাটাস
+            if(data.status === "OFF") {
+                document.getElementById('appContent').style.display = 'none';
+                document.getElementById('statusMsg').style.display = 'block';
+            } else {
+                document.getElementById('appContent').style.display = 'block';
+                document.getElementById('statusMsg').style.display = 'none';
+            }
+        }
+    });
+
+    // Copy Function
+    function copyText() {
+        const key = document.getElementById('keyDisplay').innerText;
+        navigator.clipboard.writeText(key).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "COPIED!";
+            btn.style.background = "#00ff00";
+            btn.style.color = "#000";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "#ff0000";
+                btn.style.color = "#fff";
+            }, 2000);
+        });
+    }
+</script>
+</body>
+</html>
